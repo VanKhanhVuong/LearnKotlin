@@ -3,23 +3,56 @@ package com.example.demovuong
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.example.demovuong.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    class User(name: String? = null) : People(name ?: "", 0) {
+        override fun absFunction() {
+
+        }
+    }
+
+    var user: User? = null
+
+    private fun function(
+        name: String? = "abc",
+        error: () -> Unit,
+        callback: (size: Int) -> Boolean
+    ): String {
+        name?.run {
+            val longSize = callback.invoke(this.length)
+            if (longSize) {
+                return "chuoi ki tu co do dai lon hon 5"
+            } else {
+                return "chuoi ki tu co do dai nho hon 5 "
+            }
+        } ?: run {
+            error.invoke()
+        }
+        return ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        function( error = {
+            "chuoi ki tu rong"
+        }, callback = { size ->
+            size > 5
+        }, name = "13792138132913")
+
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -27,6 +60,58 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        val list2 = mutableListOf<String>("abc", "abc")
+
+        val list3 = list2.filter {
+            it.isNotEmpty()
+            it.isNotBlank()
+        }
+        val s = list2.find { it.equals("abc") } // duyet xuoi
+        list2.findLast { it.equals("abc") }     // duyet nguoc
+
+        val index1 = list2.indexOfFirst { it.equals("abc") } // duyet xuoi
+        val index2 = list2.indexOfLast { it.equals("abc") }  // duyet nguoc
+
+
+        list2.forEach {
+
+        }
+        list2.forEachIndexed { index, content ->
+
+        }
+
+        list2.removeIf {
+            it.equals("abc")
+        }
+
+        list2.removeAll {
+            it.equals("abc")
+        }
+
+        user = User(name = "")
+
+        val data =
+            user?.takeIf { it.name.length < 5 }?.name?.length?.takeIf { it > 0 } ?: -1
+
+
+        val result1 = user?.run {
+            this.name.length.takeIf { it > 0 }
+        } ?: kotlin.run {
+            -1
+        }
+
+        user?.let { entity ->
+            entity.name + "abc"
+        }
+
+        val result2 = user?.apply {
+            this.name = "KKK"
+        }
+
+        val result3 = user?.also { entity ->
+            entity.name = "KKK"
+        }
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
